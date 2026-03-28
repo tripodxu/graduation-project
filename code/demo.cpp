@@ -152,7 +152,6 @@ private:
     
     // Split-Blocks: 当没有小块时（n[1]=0），分裂一个大块
     void splitBlocks() {
-        // 找到最小的 k 使得 n[k] > 0
         int k = -1;
         for (int i = 1; i < r; i++) {
             if (n[i] > 0) {
@@ -160,23 +159,28 @@ private:
                 break;
             }
         }
-        assert(k != -1 && "No block to split");
-        
-        // 从 k-1 级向下分裂
+        assert(k != -1);
+
         for (int i = k - 1; i >= 1; i--) {
             n[i + 1]--;
             int* bigBlock = getBlock(i + 1, n[i + 1]);
-            
-            // 分裂为 B 个大小为 B^i 的块
+
             int blockSize = (i == 1) ? B : B * B;
+
             for (int j = 0; j < B; j++) {
                 int* newBlock = allocateBlock(blockSize);
                 copy(bigBlock, j * blockSize, newBlock, 0, blockSize);
-                setBlock(i, j, newBlock);
+
+                setBlock(i, n[i] + j, newBlock); // ✅ append
             }
-            
+
+            n[i] += B;
             deallocateBlock(bigBlock);
-            n[i] = B;
+        }
+
+        // ⭐关键：恢复 invariant
+        if (n[1] > 0) {
+            n[0] = B;
         }
     }
 
@@ -421,3 +425,48 @@ int main() {
     
     return 0;
 }
+
+// int main() {
+//     ResizableArrayR3 arr;
+
+//     cout << "=== FORCE SplitBlocks Test ===" << endl;
+
+//     // Step 1: 填充
+//     for (int i = 0; i < 64; i++) {
+//         arr.grow(i);
+//     }
+
+//     cout << "After grow 64:" << endl;
+//     arr.printInfo();
+
+//     // Step 2: 一直 shrink，直到 n[1] == 0
+//     while (true) {
+//         arr.shrink();
+//         arr.printInfo();
+
+//         // ⭐关键：观察 small blocks
+//         // 你可以在 printInfo 里看到 n[1]
+
+//         // 手动 break 条件（建议你加 getter 更方便）
+//         if (arr.size() <= 16) break;
+//     }
+
+//     cout << "After forcing small blocks empty:" << endl;
+//     arr.printInfo();
+
+//     // Step 3: 再插入 → 必触发 SplitBlocks
+//     for (int i = 1000; i < 1010; i++) {
+//         arr.grow(i);
+//     }
+
+//     cout << "After grow again:" << endl;
+//     arr.printAll();
+
+//     // Step 4: 检查错误
+//     for (int i = 0; i < arr.size(); i++) {
+//         cout << arr.access(i) << " ";
+//     }
+//     cout << endl;
+
+//     return 0;
+// }
