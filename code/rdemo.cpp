@@ -334,22 +334,24 @@ public:
 };
 
 int main() {
-    ResizableArray arr(3, false);   // 关闭过程调试输出，仅记录 B 变化
+    ResizableArray arr(4, 1);   // 关闭过程调试输出，仅记录 B 变化
 
     // 测试 grow
     cout << "--- Growing to 1000 elements ---\n";
-    for (int i = 0; i < 10000000; ++i) {
+    for (int i = 0; i < 257; ++i) {
         arr.grow(i);
+        arr.print(false);
     }
 
     // 测试 shrink
     cout << "--- Shrinking back to 0 ---\n";
-    for (int i = 0; i < 10000000; ++i) {
+    for (int i = 0; i < 257; ++i) {
         arr.shrink();
+        arr.print(false);
     }
 
     // 输出 B 变化历史
-    arr.printRebuildLog();
+    // arr.printRebuildLog();
 
     return 0;
 }
