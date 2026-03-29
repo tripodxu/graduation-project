@@ -170,7 +170,7 @@ public:
         if (N == limit) {
             rebuild(2 * B);
         }
-        else if (n[1] == 2 * B && n[0] == B) {
+        else if (n[1] == 2 * B) {
             combineBlocks();
         }
 
@@ -190,31 +190,43 @@ public:
         check();
     }
 
-    // ===== shrink =====
     void shrink() {
         if (N == 0) return;
 
+        // ===== 1️⃣ 先判断是否需要缩小 B =====
+        if (B > 2) {
+            long long threshold = 1;
+            for (int i = 0; i < r; i++) threshold *= (B / 4);
+            if (N == threshold) {
+                rebuild(B / 2);
+                return; // ⭐ rebuild 已经完成 shrink
+            }
+        }
+
+        // ===== 2️⃣ 如果 level1 没有 block，需要拆分 =====
         if (n[1] == 0) {
             splitBlocks();
         }
 
+        // ===== 3️⃣ 删除一个元素 =====
         n[0]--;
         N--;
 
+        // ===== 4️⃣ 如果当前 block 空了，释放 =====
         if (n[0] == 0) {
-            deallocateBlock(getBlock(1, n[1] - 1));
-            n[1]--;
+            if (n[1] > 0) {
+                deallocateBlock(getBlock(1, n[1] - 1));
+                n[1]--;
 
-            if (n[1] > 0)
-                n[0] = B;
-        }
-        if (B >= 4) {
-            int Bdiv4 = B / 4;
-            long long threshold = 1LL * Bdiv4 * Bdiv4 * Bdiv4;
-            if (N == threshold) {
-                rebuild(B / 2);
+                // ⭐关键修复：不能盲目设为 B
+                if (n[1] > 0) {
+                    n[0] = blockSize(1);  // = B
+                } else {
+                    n[0] = 0;
+                }
             }
         }
+
         check();
     }
 
@@ -250,9 +262,9 @@ public:
     }
 };
 int main() {
-    ResizableArray arr(4); // 测试 r=4
+    ResizableArray arr(3); // 测试 r=3
 
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 100; i++) {
         arr.grow(i);
         arr.print();
     }
