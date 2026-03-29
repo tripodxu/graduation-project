@@ -105,6 +105,13 @@ private:
             n[i] = B;
             n[i + 1]++;
         }
+        cout << "combineBlocks" << " ";
+        //打印所有参数n
+        cout << "n=[" ;
+        for (int i = 0; i < r; i++) {
+             cout<< n[i] <<",";
+        }
+        cout << "]" << endl;
     }
 
     // ===== split（修复版，关键）=====
@@ -168,6 +175,7 @@ public:
         for (int i = 0; i < r; i++) limit *= B;
 
         if (N == limit) {
+            cout << "rebuild to B=" << 2 * B << endl;
             rebuild(2 * B);
         }
         else if (n[1] == 2 * B) {
@@ -262,18 +270,18 @@ public:
     }
 };
 int main() {
-    ResizableArray arr(3); // 测试 r=3
+    ResizableArray arr(4); // 测试 r=3
 
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 1000; i++) {
         arr.grow(i);
         arr.print();
     }
-    for (int i = 0; i < 100; i++){
-        arr.shrink();
-        arr.print();
-    }
-    for (int i = 0; i < 50; i++) {arr.grow(1000+i);arr.print();}
+    // for (int i = 0; i < 100; i++){
+    //     arr.shrink();
+    //     arr.print();
+    // }
+    // for (int i = 0; i < 50; i++) {arr.grow(1000+i);arr.print();}
 
-    for (int i = 0; i < arr.size(); i++)
-        cout << arr.access(i) << " ";
+    // for (int i = 0; i < arr.size(); i++)
+    //     cout << arr.access(i) << " ";
 }
