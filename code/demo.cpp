@@ -170,7 +170,7 @@ private:
             for (int j = 0; j < B; j++) {
                 int* newBlock = allocateBlock(blockSize);
                 copy(bigBlock, j * blockSize, newBlock, 0, blockSize);
-
+                // setBlock(i, j, newBlock); // 好像没啥区别
                 setBlock(i, n[i] + j, newBlock); // ✅ append
             }
 
