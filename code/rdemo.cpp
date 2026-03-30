@@ -216,16 +216,24 @@ public:
         cout << "========================\n";
     }
 
+    int totalCapacity() const {
+        int cap = 0;
+        for (int i = 1; i < r; ++i) {
+            cap += n[i] * blockSize(i);
+        }
+        return cap;
+    }
+
     void grow(int x) {
         long long limit = 1;
         for (int i = 0; i < r; ++i) limit *= B;
 
         if (N == limit) {
-            cout<<"rebuild"<<endl;
+            // cout<<"rebuild"<<endl;
             rebuild(2 * B);
         }
         if (n[1] == 2 * B && n[0] == B) {
-            cout<<B<<endl;
+            // cout<<B<<endl;
             combineBlocks();
         }
 
@@ -338,30 +346,30 @@ public:
     }
 };
 
-int main() {
-    ResizableArray arr(4, 1);   // 关闭过程调试输出，仅记录 B 变化
+// int main() {
+//     ResizableArray arr(4, 1);   // 关闭过程调试输出，仅记录 B 变化
 
-    // 测试 grow
-    cout << "--- Growing to 1000 elements ---\n";
-    for (int i = 0; i < 255; ++i) {
-        arr.grow(i);
-        arr.print(false);
-    }
-    arr.grow(255);
-    arr.print(false);
+//     // 测试 grow
+//     cout << "--- Growing to 1000 elements ---\n";
+//     for (int i = 0; i < 255; ++i) {
+//         arr.grow(i);
+//         arr.print(false);
+//     }
+//     arr.grow(255);
+//     arr.print(false);
 
-    arr.grow(256);
-    arr.print(false);    
+//     arr.grow(256);
+//     arr.print(false);    
 
-    // // 测试 shrink
-    // cout << "--- Shrinking back to 0 ---\n";
-    // for (int i = 0; i < 257; ++i) {
-    //     arr.shrink();
-    //     arr.print(false);
-    // }
+//     // // 测试 shrink
+//     // cout << "--- Shrinking back to 0 ---\n";
+//     // for (int i = 0; i < 257; ++i) {
+//     //     arr.shrink();
+//     //     arr.print(false);
+//     // }
 
-    // 输出 B 变化历史
-    // arr.printRebuildLog();
+//     // 输出 B 变化历史
+//     // arr.printRebuildLog();
 
-    return 0;
-}
+//     return 0;
+// }
