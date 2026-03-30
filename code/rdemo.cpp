@@ -182,6 +182,9 @@ private:
     void check() const {
         assert(n[0] >= 0 && n[0] <= B);
         for (int i = 1; i < r; ++i) {
+            if(!(n[i] >= 0 && n[i] <= 2 * B)){
+                cout<<"n["<<i<<"]="<<n[i]<<endl;
+            }
             assert(n[i] >= 0 && n[i] <= 2 * B);
         }
     }
@@ -218,9 +221,11 @@ public:
         for (int i = 0; i < r; ++i) limit *= B;
 
         if (N == limit) {
+            cout<<"rebuild"<<endl;
             rebuild(2 * B);
         }
-        else if (n[1] == 2 * B) {
+        if (n[1] == 2 * B && n[0] == B) {
+            cout<<B<<endl;
             combineBlocks();
         }
 
@@ -338,17 +343,22 @@ int main() {
 
     // 测试 grow
     cout << "--- Growing to 1000 elements ---\n";
-    for (int i = 0; i < 257; ++i) {
+    for (int i = 0; i < 255; ++i) {
         arr.grow(i);
         arr.print(false);
     }
+    arr.grow(255);
+    arr.print(false);
 
-    // 测试 shrink
-    cout << "--- Shrinking back to 0 ---\n";
-    for (int i = 0; i < 257; ++i) {
-        arr.shrink();
-        arr.print(false);
-    }
+    arr.grow(256);
+    arr.print(false);    
+
+    // // 测试 shrink
+    // cout << "--- Shrinking back to 0 ---\n";
+    // for (int i = 0; i < 257; ++i) {
+    //     arr.shrink();
+    //     arr.print(false);
+    // }
 
     // 输出 B 变化历史
     // arr.printRebuildLog();
